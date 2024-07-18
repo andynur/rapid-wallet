@@ -1,0 +1,69 @@
+services:
+  traefik:
+    networks:
+      development:
+        aliases:
+          - laravel.dev.test
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      # Add Docker as a mounted volume, so that Traefik can read the labels of other services
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./.infrastructure/conf/traefik/dev/traefik.yml:/traefik.yml:ro
+      - ./.infrastructure/conf/traefik/dev/traefik-certs.yml:/traefik-certs.yml
+      - ./.infrastructure/conf/traefik/dev/certificates/:/certificates
+
+  php:
+    build:
+      target: development
+      args:
+        USER_ID: ${SPIN_USER_ID}
+        GROUP_ID: ${SPIN_GROUP_ID}
+    volumes:
+      - .:/var/www/html/
+    networks:
+      - development
+    depends_on:
+      - traefik
+      - mysql
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.laravel.rule=HostRegexp(`laravel.dev.test`)"
+      - "traefik.http.routers.laravel.entrypoints=websecure"
+      - "traefik.http.routers.laravel.tls=true"
+      - "traefik.http.services.laravel.loadbalancer.server.port=8080"
+      - "traefik.http.services.laravel.loadbalancer.server.scheme=http"
+
+  node:
+    image: node:20
+    volumes:
+      - .:/usr/src/app/
+    working_dir: /usr/src/app/
+    networks:
+      - development
+
+  mysql:
+    networks:
+      - development
+    volumes:
+      - ./.infrastructure/volume_data/mysql/database_data/:/var/lib/mysql
+    environment:
+        MYSQL_ROOT_PASSWORD: "rootpassword123"
+        MYSQL_DATABASE: "rapid_wallet_db"
+        MYSQL_USER: "rapid_user"
+        MYSQL_PASSWORD: "password123"
+    ports:
+      - "3306:3306"
+
+  redis:
+    command: "redis-server --appendonly yes --requirepass mysupersecretredispassword"
+    volumes:
+      - ./.infrastructure/volume_data/redis/data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - development
+
+networks:
+  development:
