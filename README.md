@@ -81,13 +81,11 @@ This project is built with Laravel 11, providing functionalities for deposits an
 
 ## Usage
 
-### API Endpoints
+### UI Client
 
-- **POST /api/v1/transaction/deposit**: Deposit funds to the user's wallet.
-- **POST /api/v1/transaction/withdraw**: Withdraw funds from the user's wallet.
-- **POST /api/v1/transaction/history**: Get all user transaction histories.
-- **GET /api/v1/users**: List all users (admin only).
-- **GET /api/v1/users/{id}**: Show a specific user (admin only).
+Access the login page at `http://localhost:8000/login`.
+
+![Login UI Preview](./public/img/ss-login.png)
 
 ### Running Tests
 
@@ -104,6 +102,9 @@ php artisan scribe:generate
 ```
 
 Access the generated documentation at `http://localhost:8000/docs`.
+
+![Scribe UI Preview](./public/img/ss-docs.png)
+
 
 ## Role-based Access Control
 
