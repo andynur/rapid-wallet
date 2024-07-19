@@ -10,3 +10,13 @@ export type PageProps<T extends Record<string, unknown> = Record<string, unknown
         user: User;
     };
 };
+
+export interface Transactions {
+    id: number;
+    user_id: number;
+    order_id: string;
+    amount: number;
+    timestamp: string;
+    type: string;
+    status: number;
+}
