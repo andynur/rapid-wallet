@@ -3,7 +3,7 @@ services:
     networks:
       development:
         aliases:
-          - laravel.dev.test
+          - wallet.dev.test
     ports:
       - "80:80"
       - "443:443"
@@ -29,7 +29,7 @@ services:
       - mysql
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.laravel.rule=HostRegexp(`laravel.dev.test`)"
+      - "traefik.http.routers.laravel.rule=HostRegexp(`wallet.dev.test`)"
       - "traefik.http.routers.laravel.entrypoints=websecure"
       - "traefik.http.routers.laravel.tls=true"
       - "traefik.http.services.laravel.loadbalancer.server.port=8080"
